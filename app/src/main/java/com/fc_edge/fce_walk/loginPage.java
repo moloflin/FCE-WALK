@@ -4,8 +4,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.android.volley.RequestQueue;
 
 public class loginPage extends AppCompatActivity {
+    private EditText email, password;
+    private Button login;
+    private RequestQueue requestQueue;
+    private static final String URL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
