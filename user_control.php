@@ -14,7 +14,11 @@ class User {
 
 	function does_user_exist($email, $password){
 		$query = "Select * from users where email = '$email' and password = '$password'";
+		// $query = "SELECT * FROM users WHERE email = :email AND password = :password";
+		// $params = array(':email' => $email, ':password' => $password);
+		
 		$result = mysqli_query($this->connection, $query);
+		
 		if(mysqli_num_rows($result) > 0){
 			$json['success'] = ' Welcome '.$email;
 			echo json_encode($json);

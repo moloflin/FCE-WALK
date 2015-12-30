@@ -4,7 +4,11 @@
 	class db_connection {
 		private $connect;
 		function _construct() {
-			$this->connect = mysqli_connect(hostname, username, password, db_name) or die("Couldn't Connect!");
+			try {
+				$this->connect = mysqli_connect(hostname, username, password, db_name);
+			} catch(Exception e) {
+				die("Couldn't Connect!");
+			}
 		}
 
 		public function get_connection() {
