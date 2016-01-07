@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -20,41 +21,50 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class loginPage extends AppCompatActivity {
-    private EditText email, password;
-    private Button login;
+    private EditText email,password;
+    private Button sign_in_register;
     private RequestQueue requestQueue;
-    private static final String URL = "http://stage.fc-edge.com/user_control.php";
+    private static final String URL = "http://fc-edge.com/votercount/validations/android/user_control.php";
+    private StringRequest request;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-        login = (Button) findViewById(R.id.login);
+        sign_in_register = (Button) findViewById(R.id.login);
+
         requestQueue = Volley.newRequestQueue(this);
-        login.setOnClickListener(new View.OnClickListener() {
+
+        sign_in_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StringRequest request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+
+                request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.names().get(0).equals("Success")){
-                                Toast.makeText(getApplicationContext(), "SUCCESS" + jsonObject.getString("success"), Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(getApplicationContext(), LandingPage.class));
-                            }else{
-                                Toast.makeText(getApplicationContext(), "Error" + jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
+                            if(jsonObject.names().get(0).equals("success")){
+                                Toast.makeText(getApplicationContext(),"SUCCESS "+jsonObject.getString("success"),Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(getApplicationContext(),LandingPage.class));
+                            }else {
+                                Toast.makeText(getApplicationContext(), "Error" +jsonObject.getString("error"), Toast.LENGTH_SHORT).show();
                             }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -64,16 +74,19 @@ public class loginPage extends AppCompatActivity {
                 }){
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String, String> hashmap = new HashMap<String, String>();
-                        hashmap.put("email", email.getText().toString());
-                        hashmap.put("password", password.getText().toString());
-                        return hashmap;
+                        HashMap<String,String> hashMap = new HashMap<String, String>();
+                        hashMap.put("email",email.getText().toString());
+                        hashMap.put("password",password.getText().toString());
+
+                        return hashMap;
                     }
                 };
+
                 requestQueue.add(request);
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
